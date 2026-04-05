@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard Analytics</title>
+</head>
+
+<body>
+
+    <h1>Admin Dashboard</h1>
+
+    <h2>Total Revenue</h2>
+    <p>₹ {{ total_revenue }}</p>
+
+    <h2>Most Popular Movies</h2>
+    <ul>
+        {% for movie in popular_movies %}
+        <li>{{ movie.title }} - {{ movie.bookings_count }} bookings</li>
+        {% empty %}
+        <li>No movie bookings yet</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Busiest Theaters</h2>
+    <ul>
+        {% for theater in busiest_theaters %}
+        <li>{{ theater.name }} - {{ theater.bookings_count }} bookings</li>
+        {% empty %}
+        <li>No theater bookings yet</li>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html>

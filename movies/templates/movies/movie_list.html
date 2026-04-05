@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Movies</title>
+</head>
+
+<body>
+
+    <h2>Movie List</h2>
+
+    <!-- FILTER FORM -->
+    <form method="get">
+        <select name="genre">
+            <option value="">All Genres</option>
+            {% for genre in genres %}
+            <option value="{{ genre.id }}">{{ genre.name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="language">
+            <option value="">All Languages</option>
+            <option value="telugu">Telugu</option>
+            <option value="hindi">Hindi</option>
+            <option value="english">English</option>
+        </select>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <hr>
+
+    <!-- MOVIE LIST -->
+    {% for movie in movies %}
+    <div>
+
+        <h3>
+            <a href="{% url 'movie_detail' movie.id %}">
+                {{ movie.title }}
+            </a>
+        </h3>
+
+        <p>Genre: {{ movie.genre.name }}</p>
+        <p>Language: {{ movie.language }}</p>
+
+    </div>
+    {% empty %}
+    <p>No movies found.</p>
+    {% endfor %}
+
+</body>
+
+</html>

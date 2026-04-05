@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Payment</title>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</head>
+
+<body>
+
+    <h2>Movie: {{ seat.movie.title }}</h2>
+
+    <p>Seat: {{ seat.seat_number }}</p>
+
+    <p>Amount: ₹{{ seat.movie.price }}</p>
+
+    <hr>
+
+    <label>Email:</label>
+    <input type="email" id="email" required>
+
+    <br><br>
+
+    <button id="pay-btn">Pay Now</button>
+
+    <script>
+        document.getElementById("pay-btn").onclick = function(e) {
+
+            var email = document.getElementById("email").value;
+
+            if (!email) {
+                alert("Enter email");
+                return;
+            }
+
+            var options = {
+                "key": "{{ razorpay_key }}",
+                "amount": "{{ amount }}",
+                "currency": "INR",
+                "name": "BookMySeat",
+                "description": "Movie Ticket Booking",
+                "order_id": "{{ order_id }}",
+
+                "handler": function(response) { alert("Payment Successful");
+
+                    window.location.href = "/success/";
+
+                }
+            };
+
+            var rzp = new Razorpay(options);
+            rzp.open();
+
+            e.preventDefault();
+        }
+    </script>
+
+</body>
+
+</html>
