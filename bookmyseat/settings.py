@@ -24,6 +24,10 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://bookmyseat-dw16.onrender.com"
+]
+
 # =========================
 # INSTALLED APPS
 # =========================
