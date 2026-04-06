@@ -1,5 +1,13 @@
-from django.apps import AppConfig
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
-class MoviesConfig(AppConfig):
-    name = 'movies'
+if not User.objects.filter(username='admin').exists():
+    User.objects.create_superuser(
+        username='admin',
+        email='admin@gmail.com',
+        password='admin123'
+    )
+    print("Superuser created")
+else:
+    print("Already exists")
