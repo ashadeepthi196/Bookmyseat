@@ -1,13 +1,5 @@
-from django.contrib.auth import get_user_model
+from django.apps import AppConfig
 
-User = get_user_model()
-
-if not User.objects.filter(username='admin').exists():
-    User.objects.create_superuser(
-        username='admin',
-        email='admin@gmail.com',
-        password='admin123'
-    )
-    print("Superuser created")
-else:
-    print("Already exists")
+class MoviesConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'movies'

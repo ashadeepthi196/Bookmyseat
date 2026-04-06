@@ -53,3 +53,4 @@ custom_admin_site.register(Genre)
 custom_admin_site.register(Seat)
 custom_admin_site.register(Theater)
 custom_admin_site.register(Booking)
+
