@@ -1,28 +1,28 @@
 """
 Django settings for bookmyseat project.
 """
+
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
+# =========================
+# BASE DIR & ENV LOAD
+# =========================
 
-from pathlib import Path
-
-load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-SECRET_KEY = 'django-insecure-+av$2$q39r$sf0acp3feqw@2lo7fq1(rx#l4c2ujpou8i0ew3%'
+# =========================
+# SECURITY
+# =========================
 
-DEBUG = True
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
+
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['*']
-
-STATIC_URL='static/'
-
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 
 # =========================
 # INSTALLED APPS
@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'movies',
 ]
-
 
 # =========================
 # MIDDLEWARE
@@ -54,9 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
 ROOT_URLCONF = 'bookmyseat.urls'
-
 
 # =========================
 # TEMPLATES
@@ -77,9 +74,7 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'bookmyseat.wsgi.application'
-
 
 # =========================
 # DATABASE
@@ -87,62 +82,52 @@ WSGI_APPLICATION = 'bookmyseat.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',   # later PostgreSQL ki change cheyyachu
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # =========================
 # PASSWORD VALIDATION
 # =========================
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-
 
 # =========================
 # INTERNATIONALIZATION
 # =========================
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# =========================
+# STATIC FILES (IMPORTANT)
+# =========================
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # =========================
-# STATIC FILES
+# DEFAULT FIELD
 # =========================
-
-STATIC_URL = 'static/'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # =========================
-# RAZORPAY PAYMENT KEYS
+# RAZORPAY KEYS
 # =========================
 
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
-
 
 # =========================
 # EMAIL CONFIGURATION
