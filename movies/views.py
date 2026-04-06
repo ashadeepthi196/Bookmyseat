@@ -25,13 +25,42 @@ def release_expired_seats():
         seat.status = "available"
         seat.reserved_at = None
         seat.save()
+# ===============================
+# SEED DATA FUNCTION
+# ===============================
 
+def seed_data():
+    if not Movie.objects.exists():
+
+        g1 = Genre.objects.create(name="Animation", language="english")
+        g2 = Genre.objects.create(name="Action", language="telugu")
+
+        m1 = Movie.objects.create(
+            title="Tom & Jerry",
+            genre=g1,
+            language="english",
+            price=100
+        )
+
+        m2 = Movie.objects.create(
+            title="Raajasaab",
+            genre=g2,
+            language="telugu",
+            price=150
+        )
+
+        # seats create
+        for i in range(1, 5):
+            Seat.objects.create(movie=m1, seat_number=f"A{i}", status="available")
+            Seat.objects.create(movie=m2, seat_number=f"A{i}", status="available")
 
 # ===============================
 # MOVIE LIST + FILTERING
 # ===============================
 
 def movie_list(request):
+
+    seed_data()   # 🔥 IMPORTANT
 
     movies = Movie.objects.all()
     genres = Genre.objects.all()
@@ -49,7 +78,6 @@ def movie_list(request):
         "movies": movies,
         "genres": genres
     })
-
 
 # ===============================
 # MOVIE DETAIL
