@@ -59,9 +59,11 @@ def seed_data():
 # ===============================
 
 def movie_list(request):
+    print("VIEW CALLED")  # debug
 
-    #seed_data()   # 🔥 IMPORTANT
-    # create_admin() 
+    # seed data once (optional)
+    seed_data()
+
     movies = Movie.objects.all()
     genres = Genre.objects.all()
 
@@ -252,8 +254,7 @@ def admin_dashboard(request):
     }
     return render(request, "movies/analytics.html", context)
     
-
 def success(request):
-        return render(request,"success.html")
+    return render(request, "movies/success.html")
 
    
