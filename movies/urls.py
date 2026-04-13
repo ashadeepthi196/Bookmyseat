@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from movies.admin import custom_admin_site
 
 urlpatterns = [
 
@@ -15,6 +16,7 @@ urlpatterns = [
     # Payment Page
     path('payment/<int:seat_id>/', views.payment_page, name='payment_page'),
 
+    # Payment Failed
     path('payment-failed/<int:seat_id>/', views.payment_failed, name='payment_failed'),
 
     # Confirm Booking
@@ -22,8 +24,10 @@ urlpatterns = [
 
     # Admin Dashboard
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
-    
-    #Success page
-    path('success/',views.success,name='success'),
-     
+
+    # Success page
+    path('success/', views.success, name='success'),
+
+    # Custom Admin
+    path('admin/', custom_admin_site.urls),
 ]

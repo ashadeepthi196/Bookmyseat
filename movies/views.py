@@ -6,6 +6,9 @@ from django.db.models import Sum, Count
 from django.core.mail import send_mail
 from django.conf import settings
 import razorpay
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+
 
 # 0===============================
 # AUTO RELEASE EXPIRED SEATS
@@ -34,25 +37,15 @@ def seed_data():
         g1 = Genre.objects.create(name="Animation", language="english")
         g2 = Genre.objects.create(name="Action", language="telugu")
 
-        m1 = Movie.objects.create(
-            title="Tom & Jerry",
-            genre=g1,
-            language="english",
-            price=100
-        )
+        t1 = Theater.objects.create(name="Asian Sridevi")
+        t2 = Theater.objects.create(name="PVR")
 
-        m2 = Movie.objects.create(
-            title="Raajasaab",
-            genre=g2,
-            language="telugu",
-            price=150
-        )
+        m1 = Movie.objects.create(title="Tom & Jerry", genre=g1, language="english", price=100)
+        m2 = Movie.objects.create(title="Raajasaab", genre=g2, language="telugu", price=150)
 
-        # seats create
         for i in range(1, 5):
-            Seat.objects.create(movie=m1, seat_number=f"A{i}", status="available")
-            Seat.objects.create(movie=m2, seat_number=f"A{i}", status="available")
-
+            Seat.objects.create(movie=m1, theater=t1, seat_number=f"A{i}")
+            Seat.objects.create(movie=m2, theater=t2, seat_number=f"A{i}")
 # ===============================
 # MOVIE LIST + FILTERING
 # ===============================
@@ -61,6 +54,7 @@ def movie_list(request):
     print("VIEW CALLED")  # debug
 
     # seed data once (optional)
+    seed_data()
 
 
     movies = Movie.objects.all()
@@ -174,7 +168,7 @@ def payment_page(request, seat_id):
 
 def confirm_booking(request, seat_id):
 
-    seat = get_object_or_404(Seat, id=seat_id)
+    seat = get_object_or_404(Seat, id=seat_id)  # ✅ FIRST
 
     check_timeout(seat)
 
@@ -182,8 +176,17 @@ def confirm_booking(request, seat_id):
 
     if seat.status == "reserved":
 
+        # ✅ update seat
         seat.status = "booked"
         seat.save()
+
+        # ✅ CREATE BOOKING (correct place)
+        Booking.objects.create(
+            movie=seat.movie,
+            theater=seat.theater,
+            number_of_tickets=1,
+            total_price=seat.movie.price
+        )
 
         subject = "Movie Ticket Confirmation 🎬"
 
@@ -209,7 +212,6 @@ Enjoy your movie 🍿
         return render(request, "movies/success.html")
 
     return redirect("movie_list")
-
 
 # ===============================
 # PAYMENT FAILED
@@ -256,4 +258,21 @@ def admin_dashboard(request):
 def success(request):
     return render(request, "movies/success.html")
 
-   
+
+# ===============================
+# CREATE SUPERUSER (TEMP)
+# ===============================
+
+def create_admin(request):
+
+    if not User.objects.filter(username="deepthi").exists():
+
+        User.objects.create_superuser(
+            username="deepthi",
+            email="tu045044@gmail.com",
+            password="Deepthi@123"
+        )
+
+        return HttpResponse("Superuser created")
+
+    return HttpResponse("Already exists")
